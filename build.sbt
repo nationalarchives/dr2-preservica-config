@@ -5,17 +5,25 @@ lazy val root = project
   .settings(
     name := "dp-preservica-config",
     scalaVersion := "2.13.10",
-    scalacOptions ++= Seq("-Wunused:imports", "-Werror"),
+    organization := "uk.gov.nationalarchives",
+    scalacOptions ++= Seq("-Wunused:imports", "-Werror", "-Wconf:src=src_managed/.*:silent"),
     libraryDependencies ++= Seq(
       lambdaCore,
+      lambdaEvents,
       preservicaClient,
-      zioConfig,
-      zioAwsSecretsManager,
-      zioAwsNetty,
-      zioJson,
+      pureConfig,
+      pureConfigCats,
+      s3Client,
+      circeParser,
+      scalaXml,
+      scalaParserCombinators,
+      jaxb,
       scalaTest % Test,
       scalaTestMockito % Test
     )
+  ).enablePlugins(ScalaxbPlugin)
+  .settings(
+    Compile / scalaxb / scalaxbXsdSource := (Compile / resourceDirectory).value / "schemas"
   )
 
 (assembly / assemblyJarName) := "preservica-config.jar"
