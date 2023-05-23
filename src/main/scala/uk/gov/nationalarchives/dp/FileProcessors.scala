@@ -2,7 +2,7 @@ package uk.gov.nationalarchives.dp
 
 import cats.effect.IO
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
-import fs2.{Chunk, Stream, text}
+import fs2.{Chunk, text}
 import fs2.interop.reactivestreams.PublisherOps
 import org.reactivestreams.Publisher
 import uk.gov.nationalarchives.DAS3Client
@@ -58,7 +58,7 @@ object FileProcessors {
 
   private[dp] def processFiles(
       client: AdminClient[IO],
-      s3Client: DAS3Client[IO, Stream[IO, Byte]],
+      s3Client: DAS3Client[IO],
       secretName: String,
       s3Events: List[S3Entity]
   ): IO[List[Unit]] = {

@@ -4,7 +4,6 @@ import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.lambda.runtime.{Context, RequestHandler}
-import fs2.Stream
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
 import pureconfig.module.catseffect.syntax._
@@ -20,7 +19,7 @@ class Lambda extends RequestHandler[SQSEvent, Unit] {
       config <- ConfigSource.default.loadF[IO, Config]()
       s3Entities <- entitiesFromEvent(input)
       preservicaClient <- adminClient(config.preservicaUrl)
-      s3Client = DAS3Client[IO, Stream[IO, Byte]]()
+      s3Client = DAS3Client[IO]()
       _ <- processFiles(preservicaClient, s3Client, config.secretName, s3Entities)
     } yield ()
     result.unsafeRunSync()

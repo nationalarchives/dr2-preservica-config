@@ -29,7 +29,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
 
   "processFiles" should "add the schema files correctly" in {
     val preservicaClient = mock[AdminClient[IO]]
-    val s3Client = mock[DAS3Client[IO, Stream[IO, Byte]]]
+    val s3Client = mock[DAS3Client[IO]]
     val schemaCaptor = ArgumentCaptor.forClass(classOf[List[SchemaFileInfo]])
 
     when(preservicaClient.addOrUpdateSchemas(schemaCaptor.capture(), any[String]())).thenReturn(IO.unit)
@@ -64,7 +64,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
 
   "processFiles" should "add the transform files correctly" in {
     val preservicaClient = mock[AdminClient[IO]]
-    val s3Client = mock[DAS3Client[IO, Stream[IO, Byte]]]
+    val s3Client = mock[DAS3Client[IO]]
 
     val transformCaptor = ArgumentCaptor.forClass(classOf[List[TransformFileInfo]])
     when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
@@ -114,7 +114,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
 
   "processFiles" should "add the metadata templates correctly" in {
     val preservicaClient = mock[AdminClient[IO]]
-    val s3Client = mock[DAS3Client[IO, Stream[IO, Byte]]]
+    val s3Client = mock[DAS3Client[IO]]
     val metadataTemplateCaptor = ArgumentCaptor.forClass(classOf[List[MetadataTemplateInfo]])
     when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
     when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]], any[String]())).thenReturn(IO.unit)
@@ -136,7 +136,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
 
   "processFiles" should "add the index definitions correctly" in {
     val preservicaClient = mock[AdminClient[IO]]
-    val s3Client = mock[DAS3Client[IO, Stream[IO, Byte]]]
+    val s3Client = mock[DAS3Client[IO]]
     val indexDefinitionCaptor = ArgumentCaptor.forClass(classOf[List[IndexDefinitionInfo]])
     when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
     when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]], any[String]())).thenReturn(IO.unit)
@@ -160,7 +160,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     sortedFileInfo.head.xmlData should equal(<ClosureResultDefinition></ClosureResultDefinition>.toString)
   }
 
-  private def createS3Entity(s3Client: DAS3Client[IO, Stream[IO, Byte]], elem: Elem, key: String) = {
+  private def createS3Entity(s3Client: DAS3Client[IO], elem: Elem, key: String) = {
     val closureDataPublisher = createPublisher(elem)
 
     when(s3Client.download(bucket, key)).thenReturn(IO(closureDataPublisher))
