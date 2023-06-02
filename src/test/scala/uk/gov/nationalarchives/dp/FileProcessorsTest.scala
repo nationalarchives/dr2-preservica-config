@@ -39,9 +39,9 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]](), any[String]()))
       .thenReturn(IO.unit)
 
-    val s3ClosureDataEvent: S3Entity =
+    val s3ClosureDataEvent: S3Object =
       createS3Entity(s3Client, <ClosureData></ClosureData>, "schemas/closure-data-schema.xsd")
-    val s3ClosureResultEvent: S3Entity =
+    val s3ClosureResultEvent: S3Object =
       createS3Entity(s3Client, <ClosureResult></ClosureResult>, "schemas/closure-result-schema.xsd")
 
     result(processFiles(preservicaClient, s3Client, secretName, List(s3ClosureDataEvent, s3ClosureResultEvent)))
@@ -164,7 +164,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val closureDataPublisher = createPublisher(elem)
 
     when(s3Client.download(bucket, key)).thenReturn(IO(closureDataPublisher))
-    S3Entity(bucket, key)
+    S3Object(bucket, key)
   }
 
   def createPublisher(elem: Elem): Publisher[ByteBuffer] = {

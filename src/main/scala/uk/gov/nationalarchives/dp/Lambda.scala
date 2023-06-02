@@ -17,10 +17,10 @@ class Lambda extends RequestHandler[SQSEvent, Unit] {
   override def handleRequest(input: SQSEvent, context: Context): Unit = {
     val result = for {
       config <- ConfigSource.default.loadF[IO, Config]()
-      s3Entities <- entitiesFromEvent(input)
+      s3Objects <- s3ObjectsFromEvent(input)
       preservicaClient <- adminClient(config.preservicaUrl)
       s3Client = DAS3Client[IO]()
-      _ <- processFiles(preservicaClient, s3Client, config.secretName, s3Entities)
+      _ <- processFiles(preservicaClient, s3Client, config.secretName, s3Objects)
     } yield ()
     result.unsafeRunSync()
   }

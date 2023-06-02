@@ -22,22 +22,22 @@ object FileProcessors {
     def withoutSuffix: String = s.getName.split("\\.").head
   }
 
-  case class S3Entities(entities: List[S3Entity])
-  case class S3Entity(bucket: String, key: String)
+  case class S3Objects(entities: List[S3Object])
+  case class S3Object(bucket: String, key: String)
 
-  implicit val decodeEntity: Decoder[S3Entity] = (c: HCursor) =>
+  implicit val decodeEntity: Decoder[S3Object] = (c: HCursor) =>
     for {
       key <- c.downField("s3").downField("object").downField("key").as[String]
       bucket <- c.downField("s3").downField("bucket").downField("name").as[String]
     } yield {
-      S3Entity(bucket, key)
+      S3Object(bucket, key)
     }
 
-  implicit val decodeS3: Decoder[S3Entities] = (c: HCursor) =>
+  implicit val decodeS3: Decoder[S3Objects] = (c: HCursor) =>
     for {
-      entities <- c.downField("Records").as[List[S3Entity]]
+      entities <- c.downField("Records").as[List[S3Object]]
     } yield {
-      S3Entities(entities)
+      S3Objects(entities)
     }
 
   private[dp] def processSchemas(key: String, xmlData: String): SchemaFileInfo =
@@ -60,9 +60,9 @@ object FileProcessors {
       client: AdminClient[IO],
       s3Client: DAS3Client[IO],
       secretName: String,
-      s3Events: List[S3Entity]
+      s3Objects: List[S3Object]
   ): IO[List[Unit]] = {
-    s3Events
+    s3Objects
       .map(event => {
         val key = event.key
         for {
@@ -99,12 +99,12 @@ object FileProcessors {
       .map(_.mkString("\n"))
   }
 
-  private[dp] def entitiesFromEvent(input: SQSEvent): IO[List[S3Entity]] =
+  private[dp] def s3ObjectsFromEvent(input: SQSEvent): IO[List[S3Object]] =
     input.getRecords.asScala
       .map(record => {
         for {
           _ <- IO.println(record.getBody)
-          decoded <- IO.fromEither(decode[S3Entities](record.getBody))
+          decoded <- IO.fromEither(decode[S3Objects](record.getBody))
         } yield decoded
 
       })
