@@ -22,10 +22,10 @@ object FileProcessors {
     def withoutSuffix: String = s.getName.split("\\.").head
   }
 
-  case class S3Objects(entities: List[S3Object])
+  case class S3Objects(objects: List[S3Object])
   case class S3Object(bucket: String, key: String)
 
-  implicit val decodeEntity: Decoder[S3Object] = (c: HCursor) =>
+  implicit val decodeObject: Decoder[S3Object] = (c: HCursor) =>
     for {
       key <- c.downField("s3").downField("object").downField("key").as[String]
       bucket <- c.downField("s3").downField("bucket").downField("name").as[String]
@@ -35,9 +35,9 @@ object FileProcessors {
 
   implicit val decodeS3: Decoder[S3Objects] = (c: HCursor) =>
     for {
-      entities <- c.downField("Records").as[List[S3Object]]
+      objects <- c.downField("Records").as[List[S3Object]]
     } yield {
-      S3Objects(entities)
+      S3Objects(objects)
     }
 
   private[dp] def processSchemas(key: String, xmlData: String): SchemaFileInfo =
@@ -110,5 +110,5 @@ object FileProcessors {
       })
       .toList
       .sequence
-      .map(_.flatMap(_.entities))
+      .map(_.flatMap(_.objects))
 }

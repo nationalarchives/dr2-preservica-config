@@ -40,9 +40,9 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
       .thenReturn(IO.unit)
 
     val s3ClosureDataEvent: S3Object =
-      createS3Entity(s3Client, <ClosureData></ClosureData>, "schemas/closure-data-schema.xsd")
+      createS3Object(s3Client, <ClosureData></ClosureData>, "schemas/closure-data-schema.xsd")
     val s3ClosureResultEvent: S3Object =
-      createS3Entity(s3Client, <ClosureResult></ClosureResult>, "schemas/closure-result-schema.xsd")
+      createS3Object(s3Client, <ClosureResult></ClosureResult>, "schemas/closure-result-schema.xsd")
 
     result(processFiles(preservicaClient, s3Client, secretName, List(s3ClosureDataEvent, s3ClosureResultEvent)))
 
@@ -78,10 +78,10 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val dataViewElem = <ViewDataTransform xmlns:tns="https://nationalarchives.gov.uk/ClosureData"></ViewDataTransform>
     val resultViewElem =
       <ViewResultTransform xmlns:tns="https://nationalarchives.gov.uk/ClosureResult"></ViewResultTransform>
-    val dataEditEntity = createS3Entity(s3Client, dataEditElem, "transforms/closure-data-edit-transform.xsl")
-    val dataViewEntity = createS3Entity(s3Client, dataViewElem, "transforms/closure-data-view-transform.xsl")
-    val resultViewEntity = createS3Entity(s3Client, resultViewElem, "transforms/closure-result-view-transform.xsl")
-    result(processFiles(preservicaClient, s3Client, secretName, List(dataEditEntity, dataViewEntity, resultViewEntity)))
+    val dataEditObject = createS3Object(s3Client, dataEditElem, "transforms/closure-data-edit-transform.xsl")
+    val dataViewObject = createS3Object(s3Client, dataViewElem, "transforms/closure-data-view-transform.xsl")
+    val resultViewObject = createS3Object(s3Client, resultViewElem, "transforms/closure-result-view-transform.xsl")
+    result(processFiles(preservicaClient, s3Client, secretName, List(dataEditObject, dataViewObject, resultViewObject)))
 
     val transformFileInfo: List[TransformFileInfo] = transformCaptor.getAllValues.asScala.toList.flatten
     val sortedFileInfo = transformFileInfo.sortBy(_.name)
@@ -123,10 +123,10 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]](), any[String]()))
       .thenReturn(IO.unit)
 
-    val closureDataEntity =
-      createS3Entity(s3Client, <ClosureData></ClosureData>, "metadata_templates/closure-data-template.xml")
+    val closureDataObject =
+      createS3Object(s3Client, <ClosureData></ClosureData>, "metadata_templates/closure-data-template.xml")
 
-    result(processFiles(preservicaClient, s3Client, secretName, List(closureDataEntity)))
+    result(processFiles(preservicaClient, s3Client, secretName, List(closureDataObject)))
 
     val closureDataTemplateValues: List[MetadataTemplateInfo] = metadataTemplateCaptor.getAllValues.asScala.head
     val sortedFileInfo = closureDataTemplateValues.sortBy(_.name)
@@ -145,13 +145,13 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     when(preservicaClient.addOrUpdateIndexDefinitions(indexDefinitionCaptor.capture(), any[String]()))
       .thenReturn(IO.unit)
 
-    val closureResultDefinitionEntity = createS3Entity(
+    val closureResultDefinitionObject = createS3Object(
       s3Client,
       <ClosureResultDefinition></ClosureResultDefinition>,
       "index_definitions/closure-result-index-definition"
     )
 
-    result(processFiles(preservicaClient, s3Client, secretName, List(closureResultDefinitionEntity)))
+    result(processFiles(preservicaClient, s3Client, secretName, List(closureResultDefinitionObject)))
 
     val indexDefinitionInfo: List[IndexDefinitionInfo] = indexDefinitionCaptor.getAllValues.asScala.head
     val sortedFileInfo = indexDefinitionInfo.sortBy(_.name)
@@ -160,7 +160,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     sortedFileInfo.head.xmlData should equal(<ClosureResultDefinition></ClosureResultDefinition>.toString)
   }
 
-  private def createS3Entity(s3Client: DAS3Client[IO], elem: Elem, key: String) = {
+  private def createS3Object(s3Client: DAS3Client[IO], elem: Elem, key: String) = {
     val closureDataPublisher = createPublisher(elem)
 
     when(s3Client.download(bucket, key)).thenReturn(IO(closureDataPublisher))
