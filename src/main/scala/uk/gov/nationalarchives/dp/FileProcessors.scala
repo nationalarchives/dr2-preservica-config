@@ -19,7 +19,9 @@ object FileProcessors {
   implicit class KeyUtils(s: String) {
     def getName: String = s.split("/").last
 
-    def withoutSuffix: String = s.getName.split("\\.").head
+    def withoutFileExtension: String = s.getName.split("\\.").head
+
+    def documentType: String = s.split("/").head
   }
 
   case class S3Objects(objects: List[S3Object])
@@ -29,32 +31,28 @@ object FileProcessors {
     for {
       key <- c.downField("s3").downField("object").downField("key").as[String]
       bucket <- c.downField("s3").downField("bucket").downField("name").as[String]
-    } yield {
-      S3Object(bucket, key)
-    }
+    } yield S3Object(bucket, key)
 
   implicit val decodeS3: Decoder[S3Objects] = (c: HCursor) =>
     for {
       objects <- c.downField("Records").as[List[S3Object]]
-    } yield {
-      S3Objects(objects)
-    }
+    } yield S3Objects(objects)
 
   private[dp] def processSchemas(key: String, xmlData: String): SchemaFileInfo =
-    SchemaFileInfo(key.withoutSuffix, "", key.getName, xmlData)
+    SchemaFileInfo(key.withoutFileExtension, "", key.getName, xmlData)
 
   private[dp] def processTransforms(key: String, xmlData: String): TransformFileInfo = {
-    val name = key.withoutSuffix
+    val name = key.withoutFileExtension
     val fromNameSpace = XML.loadString(xmlData).getNamespace("tns")
     val purpose = if (name.contains("view")) "view" else "edit"
     TransformFileInfo(name, fromNameSpace, "http://www.w3.org/1999/xhtml", purpose, key.getName, xmlData)
   }
 
   private[dp] def processIndexDefinitions(key: String, xmlData: String): IndexDefinitionInfo =
-    IndexDefinitionInfo(key.withoutSuffix, xmlData)
+    IndexDefinitionInfo(key.withoutFileExtension, xmlData)
 
   private[dp] def processMetadataTemplates(key: String, xmlData: String): MetadataTemplateInfo =
-    MetadataTemplateInfo(key.withoutSuffix, xmlData)
+    MetadataTemplateInfo(key.withoutFileExtension, xmlData)
 
   private[dp] def processFiles(
       client: AdminClient[IO],
@@ -68,7 +66,7 @@ object FileProcessors {
         for {
           publisher <- s3Client.download(event.bucket, key)
           xml <- xmlFromPublisher(publisher)
-          _ <- key.split("/").head match {
+          _ <- key.documentType match {
             case "schemas" =>
               val schemas = processSchemas(key, xml) :: Nil
               client.addOrUpdateSchemas(schemas, secretName)
