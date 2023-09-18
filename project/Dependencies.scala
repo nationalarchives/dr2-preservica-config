@@ -1,6 +1,6 @@
 import sbt.*
 object Dependencies {
-  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.15"
+  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.17"
   lazy val scalaTestMockito = "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0"
   lazy val pureConfigCats = "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.4"
   lazy val pureConfig = "com.github.pureconfig" %% "pureconfig" % "0.17.4"
@@ -11,5 +11,5 @@ object Dependencies {
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.5"
   lazy val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
   lazy val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
-  lazy val jaxb= "javax.xml.bind" % "jaxb-api" % "2.3.1"
+  lazy val jaxb = "javax.xml.bind" % "jaxb-api" % "2.3.1"
 }
