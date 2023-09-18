@@ -11,5 +11,5 @@ object Dependencies {
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.5"
   lazy val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
   lazy val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
-  lazy val jaxb= "javax.xml.bind" % "jaxb-api" % "2.3.1"
+  lazy val jaxb = "javax.xml.bind" % "jaxb-api" % "2.3.1"
 }
