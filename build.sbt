@@ -21,7 +21,8 @@ lazy val root = project
       scalaTest % Test,
       scalaTestMockito % Test
     )
-  ).enablePlugins(ScalaxbPlugin)
+  )
+  .enablePlugins(ScalaxbPlugin)
   .settings(
     Compile / scalaxb / scalaxbXsdSource := (Compile / resourceDirectory).value / "schemas"
   )
@@ -30,5 +31,5 @@ lazy val root = project
 
 (assembly / assemblyMergeStrategy) := {
   case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
-  case _ => MergeStrategy.first
+  case _                                   => MergeStrategy.first
 }
