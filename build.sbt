@@ -4,7 +4,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "dp-preservica-config",
-    scalaVersion := "2.13.10",
+    scalaVersion := "2.13.12",
     organization := "uk.gov.nationalarchives",
     scalacOptions ++= Seq("-Wunused:imports", "-Werror", "-Wconf:src=src_managed/.*:silent"),
     libraryDependencies ++= Seq(
@@ -21,7 +21,8 @@ lazy val root = project
       scalaTest % Test,
       scalaTestMockito % Test
     )
-  ).enablePlugins(ScalaxbPlugin)
+  )
+  .enablePlugins(ScalaxbPlugin)
   .settings(
     Compile / scalaxb / scalaxbXsdSource := (Compile / resourceDirectory).value / "schemas"
   )
@@ -30,5 +31,5 @@ lazy val root = project
 
 (assembly / assemblyMergeStrategy) := {
   case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
-  case _ => MergeStrategy.first
+  case _                                   => MergeStrategy.first
 }
