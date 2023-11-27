@@ -18,9 +18,9 @@ class Lambda extends RequestHandler[SQSEvent, Unit] {
     val result = for {
       config <- ConfigSource.default.loadF[IO, Config]()
       s3Objects <- s3ObjectsFromEvent(input)
-      preservicaClient <- adminClient(config.preservicaUrl)
+      preservicaClient <- adminClient(config.preservicaUrl, config.secretName)
       s3Client = DAS3Client[IO]()
-      _ <- processFiles(preservicaClient, s3Client, config.secretName, s3Objects)
+      _ <- processFiles(preservicaClient, s3Client, s3Objects)
     } yield ()
     result.unsafeRunSync()
   }

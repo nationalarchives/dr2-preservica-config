@@ -32,11 +32,11 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val s3Client = mock[DAS3Client[IO]]
     val schemaCaptor = ArgumentCaptor.forClass(classOf[List[SchemaFileInfo]])
 
-    when(preservicaClient.addOrUpdateSchemas(schemaCaptor.capture(), any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]](), any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]](), any[String]()))
+    when(preservicaClient.addOrUpdateSchemas(schemaCaptor.capture())).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]]())).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]]()))
       .thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]](), any[String]()))
+    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]]()))
       .thenReturn(IO.unit)
 
     val s3ClosureDataEvent: S3Object =
@@ -44,7 +44,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val s3ClosureResultEvent: S3Object =
       createS3Object(s3Client, <ClosureResult></ClosureResult>, "schemas/closure-result-schema.xsd")
 
-    result(processFiles(preservicaClient, s3Client, secretName, List(s3ClosureDataEvent, s3ClosureResultEvent)))
+    result(processFiles(preservicaClient, s3Client, List(s3ClosureDataEvent, s3ClosureResultEvent)))
 
     val schemaFileInfo: List[SchemaFileInfo] = schemaCaptor.getAllValues.asScala.toList.flatten
     val sortedFileInfo = schemaFileInfo.sortBy(_.name)
@@ -67,11 +67,11 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val s3Client = mock[DAS3Client[IO]]
 
     val transformCaptor = ArgumentCaptor.forClass(classOf[List[TransformFileInfo]])
-    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateTransforms(transformCaptor.capture(), any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]](), any[String]()))
+    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]])).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateTransforms(transformCaptor.capture())).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]]()))
       .thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]](), any[String]()))
+    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]]()))
       .thenReturn(IO.unit)
 
     val dataEditElem = <EditDataTransform xmlns:tns="https://nationalarchives.gov.uk/ClosureData"></EditDataTransform>
@@ -81,7 +81,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val dataEditObject = createS3Object(s3Client, dataEditElem, "transforms/closure-data-edit-transform.xsl")
     val dataViewObject = createS3Object(s3Client, dataViewElem, "transforms/closure-data-view-transform.xsl")
     val resultViewObject = createS3Object(s3Client, resultViewElem, "transforms/closure-result-view-transform.xsl")
-    result(processFiles(preservicaClient, s3Client, secretName, List(dataEditObject, dataViewObject, resultViewObject)))
+    result(processFiles(preservicaClient, s3Client, List(dataEditObject, dataViewObject, resultViewObject)))
 
     val transformFileInfo: List[TransformFileInfo] = transformCaptor.getAllValues.asScala.toList.flatten
     val sortedFileInfo = transformFileInfo.sortBy(_.name)
@@ -116,17 +116,17 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val preservicaClient = mock[AdminClient[IO]]
     val s3Client = mock[DAS3Client[IO]]
     val metadataTemplateCaptor = ArgumentCaptor.forClass(classOf[List[MetadataTemplateInfo]])
-    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]], any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateMetadataTemplates(metadataTemplateCaptor.capture(), any[String]()))
+    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]])).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]])).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateMetadataTemplates(metadataTemplateCaptor.capture()))
       .thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]](), any[String]()))
+    when(preservicaClient.addOrUpdateIndexDefinitions(any[List[IndexDefinitionInfo]]()))
       .thenReturn(IO.unit)
 
     val closureDataObject =
       createS3Object(s3Client, <ClosureData></ClosureData>, "metadata_templates/closure-data-template.xml")
 
-    result(processFiles(preservicaClient, s3Client, secretName, List(closureDataObject)))
+    result(processFiles(preservicaClient, s3Client, List(closureDataObject)))
 
     val closureDataTemplateValues: List[MetadataTemplateInfo] = metadataTemplateCaptor.getAllValues.asScala.head
     val sortedFileInfo = closureDataTemplateValues.sortBy(_.name)
@@ -138,11 +138,11 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
     val preservicaClient = mock[AdminClient[IO]]
     val s3Client = mock[DAS3Client[IO]]
     val indexDefinitionCaptor = ArgumentCaptor.forClass(classOf[List[IndexDefinitionInfo]])
-    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]], any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]], any[String]())).thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]], any[String]()))
+    when(preservicaClient.addOrUpdateSchemas(any[List[SchemaFileInfo]])).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateTransforms(any[List[TransformFileInfo]])).thenReturn(IO.unit)
+    when(preservicaClient.addOrUpdateMetadataTemplates(any[List[MetadataTemplateInfo]]))
       .thenReturn(IO.unit)
-    when(preservicaClient.addOrUpdateIndexDefinitions(indexDefinitionCaptor.capture(), any[String]()))
+    when(preservicaClient.addOrUpdateIndexDefinitions(indexDefinitionCaptor.capture()))
       .thenReturn(IO.unit)
 
     val closureResultDefinitionObject = createS3Object(
@@ -151,7 +151,7 @@ class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenP
       "index_definitions/closure-result-index-definition"
     )
 
-    result(processFiles(preservicaClient, s3Client, secretName, List(closureResultDefinitionObject)))
+    result(processFiles(preservicaClient, s3Client, List(closureResultDefinitionObject)))
 
     val indexDefinitionInfo: List[IndexDefinitionInfo] = indexDefinitionCaptor.getAllValues.asScala.head
     val sortedFileInfo = indexDefinitionInfo.sortBy(_.name)
