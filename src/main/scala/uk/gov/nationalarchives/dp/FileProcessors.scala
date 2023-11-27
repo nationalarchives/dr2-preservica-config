@@ -57,7 +57,6 @@ object FileProcessors {
   private[dp] def processFiles(
       client: AdminClient[IO],
       s3Client: DAS3Client[IO],
-      secretName: String,
       s3Objects: List[S3Object]
   ): IO[List[Unit]] = {
     s3Objects
@@ -69,16 +68,16 @@ object FileProcessors {
           _ <- key.documentType match {
             case "schemas" =>
               val schemas = processSchemas(key, xml) :: Nil
-              client.addOrUpdateSchemas(schemas, secretName)
+              client.addOrUpdateSchemas(schemas)
             case "index_definitions" =>
               val indexDefinitions = processIndexDefinitions(key, xml) :: Nil
-              client.addOrUpdateIndexDefinitions(indexDefinitions, secretName)
+              client.addOrUpdateIndexDefinitions(indexDefinitions)
             case "metadata_templates" =>
               val metadataTemplates = processMetadataTemplates(key, xml) :: Nil
-              client.addOrUpdateMetadataTemplates(metadataTemplates, secretName)
+              client.addOrUpdateMetadataTemplates(metadataTemplates)
             case "transforms" =>
               val transforms = processTransforms(key, xml) :: Nil
-              client.addOrUpdateTransforms(transforms, secretName)
+              client.addOrUpdateTransforms(transforms)
           }
         } yield ()
       })
