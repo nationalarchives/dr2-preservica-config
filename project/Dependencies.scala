@@ -7,7 +7,7 @@ object Dependencies {
   lazy val lambdaCore = "com.amazonaws" % "aws-lambda-java-core" % "1.2.3"
   lazy val lambdaEvents = "com.amazonaws" % "aws-lambda-java-events" % "3.11.4"
   lazy val preservicaClient = "uk.gov.nationalarchives" %% "preservica-client-fs2" % "0.0.33"
-  lazy val s3Client = "uk.gov.nationalarchives" %% "da-s3-client" % "0.1.30"
+  lazy val s3Client = "uk.gov.nationalarchives" %% "da-s3-client" % "0.1.32"
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.6"
   lazy val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.2.0"
   lazy val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
