@@ -2,8 +2,8 @@ import sbt.*
 object Dependencies {
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.17"
   lazy val scalaTestMockito = "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0"
-  lazy val pureConfigCats = "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.4"
-  lazy val pureConfig = "com.github.pureconfig" %% "pureconfig" % "0.17.4"
+  lazy val pureConfigCats = "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.5"
+  lazy val pureConfig = "com.github.pureconfig" %% "pureconfig" % "0.17.5"
   lazy val lambdaCore = "com.amazonaws" % "aws-lambda-java-core" % "1.2.3"
   lazy val lambdaEvents = "com.amazonaws" % "aws-lambda-java-events" % "3.11.4"
   lazy val preservicaClient = "uk.gov.nationalarchives" %% "preservica-client-fs2" % "0.0.40"
