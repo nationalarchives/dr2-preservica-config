@@ -11,11 +11,15 @@ import uk.gov.nationalarchives.dp.client.FileInfo._
 import cats.implicits._
 import io.circe.{Decoder, HCursor}
 import io.circe.parser.decode
+import org.typelevel.log4cats.{LoggerName, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jFactory
+
 import java.nio.ByteBuffer
 import scala.jdk.CollectionConverters.ListHasAsScala
 import scala.xml.XML
 
 object FileProcessors {
+
   implicit class KeyUtils(s: String) {
     def getName: String = s.split("/").last
 
@@ -58,13 +62,14 @@ object FileProcessors {
       client: AdminClient[IO],
       s3Client: DAS3Client[IO],
       s3Objects: List[S3Object]
-  ): IO[List[Unit]] = {
+  )(implicit logger: SelfAwareStructuredLogger[IO]): IO[List[Unit]] = {
     s3Objects
       .map(event => {
         val key = event.key
         for {
           publisher <- s3Client.download(event.bucket, key)
           xml <- xmlFromPublisher(publisher)
+          _ <- logger.info(s"Adding or updating $key with document type ${key.documentType}")
           _ <- key.documentType match {
             case "schemas" =>
               val schemas = processSchemas(key, xml) :: Nil
