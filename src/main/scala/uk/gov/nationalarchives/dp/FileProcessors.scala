@@ -11,8 +11,7 @@ import uk.gov.nationalarchives.dp.client.FileInfo._
 import cats.implicits._
 import io.circe.{Decoder, HCursor}
 import io.circe.parser.decode
-import org.typelevel.log4cats.{LoggerName, SelfAwareStructuredLogger}
-import org.typelevel.log4cats.slf4j.Slf4jFactory
+import org.typelevel.log4cats.SelfAwareStructuredLogger
 
 import java.nio.ByteBuffer
 import scala.jdk.CollectionConverters.ListHasAsScala

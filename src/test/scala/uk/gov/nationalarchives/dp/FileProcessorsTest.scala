@@ -12,6 +12,8 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito._
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jFactory
 import uk.gov.nationalarchives.DAS3Client
 import uk.gov.nationalarchives.dp.FileProcessors._
 import uk.gov.nationalarchives.dp.client.AdminClient
@@ -20,8 +22,10 @@ import uk.gov.nationalarchives.dp.client.FileInfo._
 import java.nio.ByteBuffer
 import scala.jdk.CollectionConverters._
 import scala.xml.Elem
+
 class FileProcessorsTest extends AnyFlatSpec with MockitoSugar with TableDrivenPropertyChecks {
 
+  implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jFactory.create[IO].getLogger
   val secretName = "testSecret"
   val bucket = "testBucket"
 
