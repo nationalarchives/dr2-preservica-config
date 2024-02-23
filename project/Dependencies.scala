@@ -1,6 +1,6 @@
 import sbt.*
 object Dependencies {
-  private lazy val logbackVersion = "2.22.1"
+  private lazy val logbackVersion = "2.23.0"
   private lazy val log4CatsVersion = "2.6.0"
 
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.18"
@@ -14,8 +14,8 @@ object Dependencies {
   lazy val log4jTemplateJson = "org.apache.logging.log4j" % "log4j-layout-template-json" % logbackVersion
   lazy val log4CatsCore = "org.typelevel" %% "log4cats-core" % log4CatsVersion;
   lazy val log4CatsSlf4j = "org.typelevel" %% "log4cats-slf4j" % log4CatsVersion
-  lazy val preservicaClient = "uk.gov.nationalarchives" %% "preservica-client-fs2" % "0.0.48"
-  lazy val s3Client = "uk.gov.nationalarchives" %% "da-s3-client" % "0.1.35"
+  lazy val preservicaClient = "uk.gov.nationalarchives" %% "preservica-client-fs2" % "0.0.51"
+  lazy val s3Client = "uk.gov.nationalarchives" %% "da-s3-client" % "0.1.36"
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.6"
   lazy val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.2.0"
   lazy val scalaParserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
