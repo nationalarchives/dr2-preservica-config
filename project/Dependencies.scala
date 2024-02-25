@@ -5,8 +5,8 @@ object Dependencies {
 
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.18"
   lazy val scalaTestMockito = "org.scalatestplus" %% "mockito-4-6" % "3.2.15.0"
-  lazy val pureConfigCats = "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.5"
-  lazy val pureConfig = "com.github.pureconfig" %% "pureconfig" % "0.17.5"
+  lazy val pureConfigCats = "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.6"
+  lazy val pureConfig = "com.github.pureconfig" %% "pureconfig" % "0.17.6"
   lazy val lambdaCore = "com.amazonaws" % "aws-lambda-java-core" % "1.2.3"
   lazy val lambdaEvents = "com.amazonaws" % "aws-lambda-java-events" % "3.11.4"
   lazy val log4jSlf4j = "org.apache.logging.log4j" % "log4j-slf4j-impl" % logbackVersion
