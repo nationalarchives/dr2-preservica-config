@@ -4,7 +4,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "dp-preservica-config",
-    scalaVersion := "2.13.12",
+    scalaVersion := "2.13.13",
     organization := "uk.gov.nationalarchives",
     scalacOptions ++= Seq("-Wunused:imports", "-Werror", "-Wconf:src=src_managed/.*:silent"),
     libraryDependencies ++= Seq(
