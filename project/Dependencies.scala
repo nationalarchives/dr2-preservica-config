@@ -1,6 +1,6 @@
 import sbt.*
 object Dependencies {
-  private lazy val logbackVersion = "2.23.0"
+  private lazy val logbackVersion = "2.23.1"
   private lazy val log4CatsVersion = "2.6.0"
 
   lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.2.18"
